@@ -4,9 +4,22 @@
 /**
  * @namespace gnuplotpp
  */
-namespace gnuplotpp {
+namespace gnuplotpp
+{
+
+/**
+ * @enum Dimension
+ */
+enum class Dimension : unsigned char
+{
+    x = 0,
+    y,
+    z
+};
+
+class Session;
 
 }
 
 
-#endif // end _GNUPLOT_HPP_
+#endif // end _GNUPLOT_PP_HPP_
