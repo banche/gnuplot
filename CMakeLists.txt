@@ -14,4 +14,5 @@ endif()
 
 include(cmake/FindGnuplot.cmake)
 add_subdirectory(src)
-
+include_directories(src)
+add_subdirectory(examples)
