@@ -17,9 +17,10 @@ enum class Dimension : unsigned char
     z
 };
 
-class Session;
-
 }
+
+#include "session.hpp"
+
 
 
 #endif // end _GNUPLOT_PP_HPP_
