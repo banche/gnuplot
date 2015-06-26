@@ -12,7 +12,24 @@ else()
      message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+set(GNUPLOTPP_MAJOR 0)
+set(GNUPLOTPP_MINOR 1)
+set(GNUPLOTPP_PATCH 0)
+
+set(GNUPLOTPP_VERSION "${GNUPLOTPP_MAJOR}.${GNUPLOTPP_MINOR}.${GNUPLOTPP_PATCH}")
+
+message(STATUS "Building GnuplotPP ${GNUPLOTPP_VERSION}")
+
+# set cmake properties
 include(cmake/FindGnuplot.cmake)
+
+# compile sources
 add_subdirectory(src)
+
+#set includes
 include_directories(src)
+include_directories(.)
+
+# compile tools and examples
+add_subdirectory(tools)
 add_subdirectory(examples)
