@@ -1,7 +1,7 @@
 #include "gnuplot++.hpp"
 
 #include <vector>
-
+#include "tools/tools.hpp"
 
 
 int main() {
@@ -13,13 +13,9 @@ int main() {
     
     gnuplotpp::Session session;
     
-    session.plot(x , "f(x) = x" , "with lines");
+    session.plot(x , std::string("f(x) = x") , "with lines");
     
-    std::cout << std::endl << "Press ENTER to continue..." << std::endl;
-
-    std::cin.clear();
-    std::cin.ignore(std::cin.rdbuf()->in_avail());
-    std::cin.get();
+    tools::press_enter_to_continue();
     
     return 0;
 }
