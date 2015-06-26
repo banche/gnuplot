@@ -7,16 +7,6 @@
 namespace gnuplotpp
 {
 
-/**
- * @enum Dimension
- */
-enum class Dimension : unsigned char
-{
-    x = 0,
-    y,
-    z
-};
-
 }
 
 #include "session.hpp"

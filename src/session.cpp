@@ -116,6 +116,12 @@ Session& Session::cmd(const std::string& cmdstr)
     return *this;
 }
 
+Session& Session::operator<<(const std::string& command)
+{
+    return cmd(command);
+}
+
+
 Session& Session::plot(const std::string& filename, int column, const std::string& title, const std::string& style)
 {
     // check if file exist
@@ -128,6 +134,7 @@ Session& Session::plot(const std::string& filename, int column, const std::strin
         cmdStream << "replot";
     else 
         cmdStream << "plot";
+    
     // file using given column
     cmdStream << "\"" << filename << "\" using " << column;
     // handle title
@@ -143,6 +150,99 @@ Session& Session::plot(const std::string& filename, int column, const std::strin
     return cmd(cmdStream.str());
 }
 
+Session& Session::plot(
+    const std::string& filename, 
+    int xColumn, 
+    int yColumn, 
+    const std::string& title, 
+    const std::string& style)
+{
+    // check if the file exist
+    if(not fileExist(filename))
+        return *this;
+    
+    std::ostringstream cmdStream;
+    if(m_plot)
+        cmdStream << "replot";
+    else
+        cmdStream << "plot";
+    
+    cmdStream << "\"" << filename << "\" using " << xColumn << ":" << yColumn;
+    if(title.empty())
+        cmdStream << " notitle";
+    else 
+        cmdStream << " title \"" << title << "\"";
+    
+    if(style.empty())
+        cmdStream << " with linespoint";
+    else
+        cmdStream << " " << style;
+    
+    return cmd(cmdStream.str());
+}
+
+Session& Session::setGrid()
+{
+    return cmd("set grid");
+}
+
+Session& Session::unsetGrid()
+{
+    return cmd("unset grid");
+}
+
+static const std::string& dim2String(Dimension dim)
+{
+    static const std::string dimStr[3] = 
+    {
+        "x","y","z"
+    };
+    return dimStr[static_cast<int>(dim)];
+}
+
+Session& Session::setRange(float from, float to, Dimension dim)
+{
+
+    std::ostringstream cmdStream;
+    cmdStream << "set " << dim2String(dim) << "range[" << from << ":" << to << "]";
+    return cmd(cmdStream.str());    
+}
+
+
+Session& Session::clear()
+{
+    m_plot = false;
+    cmd("clear");
+    return *this;
+}
+
+Session& Session::overrideNextPlot()
+{
+    m_plot = false;
+}
+
+
+
+
+Session& Session::setAutoScale(Dimension dim)
+{
+    return cmd("set autoscale " + dim2String(dim));
+}
+
+Session& Session::setLogScale(Dimension dim, int base)
+{
+    return cmd("set logscale " + dim2String(dim) + " " + std::to_string(base));
+}
+
+Session& Session::unsetLogScale(Dimension dim)
+{
+    return cmd("unset logscale " + dim2String(dim));
+}
+
+Session& Session::setLabel(Dimension dim, const std::string& title)
+{
+    return cmd("set " + dim2String(dim) + "label \"" + title + "\"");
+}
 
 
 
