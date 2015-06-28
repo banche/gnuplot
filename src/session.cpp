@@ -97,9 +97,44 @@ Session& Session::showOnScreen()
     }
     cmd("set output");
     cmd("set terminal qt");
-    //TODO plot/replot if needed
+    if(m_plot)
+        cmd("replot");
+    
     return *this;
 }
+
+static const std::string& fileTypeToTerminal(FileType fileType)
+{
+    static const std::string s_table[3] = {
+        "pngcairo",
+        "pdfcairo",
+        "postscript color"
+    };
+    
+    return s_table[static_cast<int>(fileType)];
+}
+
+
+
+Session& Session::saveToFile(FileType fileType, const std::string& filename, float xSize, float ySize)
+{
+    if( ySize == 0)
+        ySize = xSize;
+    if(xSize == 0)
+    {
+        xSize = 10;
+        ySize = 10;
+    }
+    
+    
+    std::string cmdStr = "set terminal " + fileTypeToTerminal(fileType) + " size " + std::to_string(xSize);
+    cmdStr += "," + std::to_string(ySize);
+    
+    std::string outputStr = "set output \"" + filename + "\"";
+    
+    return cmd(cmdStr).cmd(outputStr);
+}
+
 
 Session& Session::cmd(const std::string& cmdstr)
 {
@@ -244,6 +279,20 @@ Session& Session::setLabel(Dimension dim, const std::string& title)
     return cmd("set " + dim2String(dim) + "label \"" + title + "\"");
 }
 
+Session& Session::setLegendPosition(const std::string& position)
+{
+    return cmd("set key " + position);
+}
 
+Session& Session::unsetLegend()
+{
+    return cmd("set nokey"); 
+}
+
+
+Session& Session::setTitle(const std::string& title)
+{
+    return cmd("set title \"" + title + "\"");
+}
 
 }

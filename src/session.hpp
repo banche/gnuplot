@@ -174,9 +174,15 @@ class Session {
         Session& setLabel(Dimension dim, const std::string& title);
         
         /**
-         * Add a legend to the graph
+         * Specify where the legend shoud be
+         * TODO: give an enum class instead of a string
          */ 
-        Session& setLegend(const std::string& legend);
+        Session& setLegendPosition(const std::string& position);
+        
+        /**
+         * Disable the legend information for the graph
+         */
+        Session& unsetLegend();
         
 
     private:
