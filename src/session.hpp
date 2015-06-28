@@ -124,6 +124,22 @@ class Session {
             const std::string& title = "", 
             const std::string& style = "");
         
+        template<class XVectorT, class YVectorT, class EVectorT>
+        Session& plotWithError(
+            const XVectorT x,
+            const YVectorT y,
+            const EVectorT dyErrors,
+            const std::string& title ="",
+            const std::string& style = "");
+          
+        Session& plotWithError(
+            const std::string& filename,
+            const std::string& title = "",
+            const std::string& style = "",
+            int xColumn = 1,
+            int yColumn = 2,
+            int dyErrorColumn= 3);
+        
         Session& plot(
             const std::string& filename, 
             int xColumn, 
@@ -243,6 +259,30 @@ Session& Session::plot(const XVectorT& x, const YVectorT& y, const std::string& 
     
     return plot(filename,1,2,title,style);
 }
+
+template<class XVectorT, class YVectorT, class EVectorT>
+Session& Session::plotWithError(const XVectorT x, const YVectorT y, const EVectorT dyErrors, const std::string& title, const std::string& style)
+{
+    if(x.size() == 0 || y.size() == 0 || dyErrors.size() == 0)
+        return *this;
+    
+    int range = std::min(x.size(),std::min(y.size(),dyErrors.size()));
+    
+    std::ofstream stream;
+    const std::string& filename = createTemporaryFile(stream);
+    if(filename.empty()) 
+        return *this;
+    
+    for(int i = 0 ; i < range ; ++i)
+    {
+        stream << x[i] << "\t" << y[i] << "\t" << dyErrors[i] << std::endl;
+    }
+    stream.flush();
+    stream.close();
+    
+    return plotWithError(filename,title,style);
+}
+
 
 
     

@@ -295,4 +295,31 @@ Session& Session::setTitle(const std::string& title)
     return cmd("set title \"" + title + "\"");
 }
 
+Session& Session::plotWithError(
+    const std::string& filename, 
+    const std::string& title, 
+    const std::string& style, 
+    int xColumn, int yColumn, int dyErrorColumn)
+{
+    std::string cmdStr;
+    if(m_plot)
+        cmdStr = "replot ";
+    else 
+        cmdStr = "plot ";
+    
+    cmdStr += "\"" + filename + "\" using " + std::to_string(xColumn) + ":" + std::to_string(yColumn);
+    cmdStr += ":" + std::to_string(dyErrorColumn) + " with errorbars ";
+    
+    if(not title.empty())
+        cmdStr += "notitle ";
+    else 
+        cmdStr += "title \"" + title + "\" ";
+    
+    if(not style.empty())
+        cmdStr += style;
+    
+    return cmd(cmdStr);
+}
+
+
 }
