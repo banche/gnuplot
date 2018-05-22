@@ -31,6 +31,12 @@ enum class FileType : unsigned char
     ps
 };
 
+enum class ScreenTerminal : unsigned char
+{
+    qt = 0,
+    wxt
+};
+
 /**
  * @class Session
  * @brief gnuplot session
@@ -48,7 +54,7 @@ class Session {
          * constructor
          * Initialize a gnuplot session
          */
-        Session();
+        Session(ScreenTerminal terminal = ScreenTerminal::qt);
         
         /// disable copy constructor/operator
         Session(const Session& other) = delete;
@@ -57,7 +63,7 @@ class Session {
         /**
          * Show the plot on the screen
          */ 
-        Session& showOnScreen();
+        Session& showOnScreen(ScreenTerminal termimal = ScreenTerminal::qt);
         
         /**
          * save the current plot into a file using the 
@@ -215,6 +221,7 @@ class Session {
         bool        m_enableScreen;
         bool        m_isValid;
         bool        m_plot;
+        ScreenTerminal m_term;
         
         std::vector<std::string> m_tmpFiles;
 

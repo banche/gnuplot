@@ -25,7 +25,7 @@ int main()
     } while(cur < end);
     
     
-    gnuplotpp::Session session;
+    gnuplotpp::Session session(gnuplotpp::ScreenTerminal::wxt);
     session.cmd("set key outside");
     float offset = 0.f;
     

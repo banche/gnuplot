@@ -25,7 +25,7 @@ int main() {
         z.push_back(std::cos(i));
     }
     
-    gnuplotpp::Session session;
+    gnuplotpp::Session session(gnuplotpp::ScreenTerminal::wxt);
     
     session.cmd("set key outside");
     

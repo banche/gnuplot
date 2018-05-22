@@ -9,11 +9,33 @@
 
 namespace gnuplotpp {
 
-Session::Session()
+  static const std::string& fileTypeToTerminal(FileType fileType)
+{
+    static const std::string s_table[3] = {
+        "pngcairo",
+        "pdfcairo",
+        "postscript color"
+    };
+    
+    return s_table[static_cast<int>(fileType)];
+}
+
+static const std::string& screenTerminalToString(ScreenTerminal term)
+{
+    static const std::string s_termTable[2] = {
+        "qt",
+        "wxt"
+    };
+
+    return s_termTable[static_cast<int>(term)];
+}
+
+Session::Session(ScreenTerminal term)
     : m_gnuCmd(0)
     , m_enableScreen(false)
     , m_isValid(false)
     , m_plot(false)
+    , m_term(term)
 {
     init();
 }
@@ -48,7 +70,7 @@ void Session::init()
 
     m_isValid = true;
     if(m_enableScreen)
-        showOnScreen();
+        showOnScreen(m_term);
 }
 
 
@@ -88,7 +110,7 @@ bool Session::fileExist(const std::string& filename)
 
 
 
-Session& Session::showOnScreen()
+Session& Session::showOnScreen(ScreenTerminal term)
 {
     if(not m_enableScreen)
     {
@@ -96,22 +118,11 @@ Session& Session::showOnScreen()
         return *this;
     }
     cmd("set output");
-    cmd("set terminal qt");
+    cmd("set terminal " + screenTerminalToString(term));
     if(m_plot)
         cmd("replot");
     
     return *this;
-}
-
-static const std::string& fileTypeToTerminal(FileType fileType)
-{
-    static const std::string s_table[3] = {
-        "pngcairo",
-        "pdfcairo",
-        "postscript color"
-    };
-    
-    return s_table[static_cast<int>(fileType)];
 }
 
 
@@ -254,6 +265,7 @@ Session& Session::clear()
 Session& Session::overrideNextPlot()
 {
     m_plot = false;
+    return *this;
 }
 
 
